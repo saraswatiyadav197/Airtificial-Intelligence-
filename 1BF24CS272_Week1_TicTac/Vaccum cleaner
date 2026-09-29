@@ -1,0 +1,122 @@
+def simple_reflex_agent(room_a, room_b, position):
+
+    print("\n========== SIMPLE REFLEX AGENT ==========")
+
+    while True:
+
+        print("\nVacuum is in Room", position)
+        print("Room A:", room_a, " Room B:", room_b)
+
+        # If current room is dirty, clean it
+        if position == 'A' and room_a == 'Dirty':
+            print("Action: SUCK")
+            room_a = 'Clean'
+
+        elif position == 'B' and room_b == 'Dirty':
+            print("Action: SUCK")
+            room_b = 'Clean'
+
+        # If current room is clean, move to other room
+        elif position == 'A' and room_a == 'Clean':
+            print("Action: MOVE RIGHT")
+            position = 'B'
+
+        elif position == 'B' and room_b == 'Clean':
+            print("Action: MOVE LEFT")
+            position = 'A'
+
+        # Check goal
+        if room_a == 'Clean' and room_b == 'Clean':
+            print("\nGoal Achieved!")
+            break
+
+    print("Final Room A:", room_a)
+    print("Final Room B:", room_b)
+    print("Final Vacuum Position: Room", position)
+
+
+# Goal Based Agent
+def goal_based_agent(room_a, room_b, position):
+
+    print("\n========== GOAL BASED AGENT ==========")
+
+    while True:
+
+        print("\nVacuum is in Room", position)
+        print("Room A:", room_a, " Room B:", room_b)
+
+        # Goal already achieved
+        if room_a == 'Clean' and room_b == 'Clean':
+            print("\nGoal Achieved!")
+            break
+
+        # Current room is dirty
+        if position == 'A' and room_a == 'Dirty':
+            print("Action: SUCK")
+            room_a = 'Clean'
+
+        elif position == 'B' and room_b == 'Dirty':
+            print("Action: SUCK")
+            room_b = 'Clean'
+
+        # Current room is clean but other room is dirty
+        elif position == 'A' and room_a == 'Clean' and room_b == 'Dirty':
+            print("Action: MOVE RIGHT")
+            position = 'B'
+
+        elif position == 'B' and room_b == 'Clean' and room_a == 'Dirty':
+            print("Action: MOVE LEFT")
+            position = 'A'
+
+    print("Final Room A:", room_a)
+    print("Final Room B:", room_b)
+    print("Final Vacuum Position: Room", position)
+
+
+# ================= MAIN PROGRAM =================
+
+print("========== VACUUM CLEANER ==========")
+
+room_a = input("Enter status of Room A (Clean/Dirty): ").strip().capitalize()
+room_b = input("Enter status of Room B (Clean/Dirty): ").strip().capitalize()
+position = input("Enter initial vacuum location (A/B): ").strip().upper()
+
+# Validate input
+while room_a not in ['Clean', 'Dirty']:
+    print("Invalid input!")
+    room_a = input("Enter status of Room A (Clean/Dirty): ").strip().capitalize()
+
+while room_b not in ['Clean', 'Dirty']:
+    print("Invalid input!")
+    room_b = input("Enter status of Room B (Clean/Dirty): ").strip().capitalize()
+
+while position not in ['A', 'B']:
+    print("Invalid input!")
+    position = input("Enter initial vacuum location (A/B): ").strip().upper()
+
+
+# Store initial values
+initial_a = room_a
+initial_b = room_b
+initial_position = position
+
+print("\n========== INITIAL STATE ==========")
+print("Room A:", initial_a)
+print("Room B:", initial_b)
+print("Vacuum Position: Room", initial_position)
+
+
+# Run Simple Reflex Agent
+simple_reflex_agent(
+    initial_a,
+    initial_b,
+    initial_position
+)
+
+
+# Run Goal Based Agent
+goal_based_agent(
+    initial_a,
+    initial_b,
+    initial_position
+)
