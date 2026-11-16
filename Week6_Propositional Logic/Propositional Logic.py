@@ -3,43 +3,53 @@ from itertools import product
 def implies(a, b):
     return (not a) or b
 
+def tf(value):
+    return "T" if value else "F"
+
 def evaluate_kb(P, Q, R):
     s1 = implies(Q, P)
     s2 = implies(P, not Q)
     s3 = Q or R
-    return s1 and s2 and s3
+
+    kb = s1 and s2 and s3
+
+    return s1, s2, s3, kb
 
 def tt_entails(query):
-    symbols = ["P", "Q", "R"]
-
     for values in product([False, True], repeat=3):
-        model = dict(zip(symbols, values))
+        model = dict(zip(["P", "Q", "R"], values))
 
-        if evaluate_kb(model["P"], model["Q"], model["R"]):
-            if not query(model):
-                return False
+        if evaluate_kb(**model)[3] and not query(model):
+            return False
 
     return True
 
-print("P Q R | Q->P P->~Q Q|R | KB")
-print("-" * 35)
+print("\n              TRUTH TABLE ENUMERATION")
+print("=" * 75)
 
-for values in product([False, True], repeat=3):
-    P, Q, R = values
+print(f"{'P':^5} {'Q':^5} {'R':^5} | "
+      f"{'Q->P':^7} {'P->~Q':^7} {'Q|R':^7} | "
+      f"{'AND (KB)':^10}")
 
-    s1 = implies(Q, P)
-    s2 = implies(P, not Q)
-    s3 = Q or R
-    kb = s1 and s2 and s3
+print("-" * 75)
 
-    print(P, Q, R, "|", s1, s2, s3, "|", kb)
+for P, Q, R in product([False, True], repeat=3):
 
-print("\nEntailment Results:")
+    s1, s2, s3, kb = evaluate_kb(P, Q, R)
 
-print("KB entails R:", tt_entails(lambda m: m["R"]))
+    print(f"{tf(P):^5} {tf(Q):^5} {tf(R):^5} | "
+          f"{tf(s1):^7} {tf(s2):^7} {tf(s3):^7} | "
+          f"{tf(kb):^10}")
 
-print("KB entails R -> P:",
-      tt_entails(lambda m: implies(m["R"], m["P"])))
+print("-" * 75)
 
-print("KB entails Q -> R:",
-      tt_entails(lambda m: implies(m["Q"], m["R"])))
+print("\n              ENTAILMENT RESULTS")
+print("=" * 45)
+
+print("KB entails R       :", tf(tt_entails(lambda m: m["R"])))
+
+print("KB entails R -> P  :", tf(tt_entails(lambda m: implies(m["R"], m["P"]))))
+
+print("KB entails Q -> R  :", tf(tt_entails(lambda m: implies(m["Q"], m["R"]))))
+
+print("=" * 45)
